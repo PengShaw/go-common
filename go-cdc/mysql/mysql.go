@@ -17,7 +17,7 @@ type CDC struct {
 }
 
 type Options struct {
-	Ip       string // default, "127.0.0.1"
+	Host     string // default, "127.0.0.1"
 	Port     int    // default, 3306
 	User     string // default, root
 	Password string
@@ -35,8 +35,8 @@ type Table struct {
 type TableHandlerFunc func(oldItem map[string]interface{}, newItem map[string]interface{}, table string)
 
 func (o *Options) init() {
-	if o.Ip == "" {
-		o.Ip = "127.0.0.1"
+	if o.Host == "" {
+		o.Host = "127.0.0.1"
 	}
 	if o.Port == 0 {
 		o.Port = 3306
@@ -58,7 +58,7 @@ func (o *Options) init() {
 func NewCDC(options *Options) (*CDC, error) {
 	options.init()
 	cfg := canal.NewDefaultConfig()
-	cfg.Addr = fmt.Sprintf("%s:%d", options.Ip, options.Port)
+	cfg.Addr = fmt.Sprintf("%s:%d", options.Host, options.Port)
 	cfg.User = options.User
 	cfg.Password = options.Password
 	cfg.Flavor = options.Flavor
