@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"errors"
 	"fmt"
 	"github.com/go-mysql-org/go-mysql/canal"
 	"io"
@@ -28,11 +29,10 @@ type Options struct {
 
 type Table struct {
 	Name        string
-	Model       interface{}
 	HandlerFunc TableHandlerFunc
 }
 
-type TableHandlerFunc func(oldItem interface{}, newItem interface{}, table string)
+type TableHandlerFunc func(oldItem map[string]interface{}, newItem map[string]interface{}, table string)
 
 func (o *Options) init() {
 	if o.Ip == "" {
@@ -91,7 +91,6 @@ func (cdc *CDC) Listen() error {
 type binlogHandler struct {
 	cdc                     *CDC
 	canal.DummyEventHandler // Dummy handler from external lib
-	binlogParser            // Our custom helper
 }
 
 func (h *binlogHandler) String() string {
@@ -130,14 +129,14 @@ func (h *binlogHandler) OnRow(e *canal.RowsEvent) error {
 		step = 2
 	}
 	for i := current; i < len(e.Rows); i += step {
-		item, err := h.getRowItem(e, i, currentTable)
+		item, err := h.getRowItem(e, i)
 		if err != nil {
 			_, _ = fmt.Fprintln(DefaultWriter, "Error: get row item failed ", err.Error())
 			return nil
 		}
 		switch e.Action {
 		case canal.UpdateAction:
-			oldItem, err := h.getRowItem(e, i-1, currentTable)
+			oldItem, err := h.getRowItem(e, i-1)
 			if err != nil {
 				_, _ = fmt.Fprintln(DefaultWriter, "Error: when update action, get old row item failed ", err.Error())
 				return nil
@@ -150,4 +149,18 @@ func (h *binlogHandler) OnRow(e *canal.RowsEvent) error {
 		}
 	}
 	return nil
+}
+
+func (*binlogHandler) getRowItem(e *canal.RowsEvent, rowIndex int) (res map[string]interface{}, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			msg := fmt.Sprintln("Error: Recover from ", r, " ", string(debug.Stack()))
+			err = errors.New(msg)
+		}
+	}()
+	res = make(map[string]interface{})
+	for id, column := range e.Table.Columns {
+		res[column.Name] = e.Rows[rowIndex][id]
+	}
+	return
 }

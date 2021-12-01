@@ -6,21 +6,13 @@ package main
 import (
 	"fmt"
 	"github.com/PengShaw/go-common/go-cdc/mysql"
-	"time"
 )
 
-type A struct {
-	Id        uint       `binlog:"column:id"`
-	Name      string     `binlog:"column:name"`
-	IsAdmin   bool       `binlog:"column:isAdmin"`
-	CreatedAt *time.Time `binlog:"column:createdAt"`
-}
-
 func main() {
-	var oldCh = make(chan A)
-	var newCh = make(chan A)
+	var oldCh = make(chan map[string]interface{})
+	var newCh = make(chan map[string]interface{})
 
-	var printer = func(prefix string, ch chan A) {
+	var printer = func(prefix string, ch chan map[string]interface{}) {
 		for {
 			a := <-ch
 			fmt.Printf(prefix+" %v \n", a)
@@ -31,17 +23,10 @@ func main() {
 
 	tables := []mysql.Table{
 		mysql.Table{
-			Name:  "origin",
-			Model: A{},
-			HandlerFunc: func(oldItem interface{}, newItem interface{}, table string) {
-				if oldItem != nil {
-					oldA := oldItem.(A)
-					oldCh <- oldA
-				}
-				if newItem != nil {
-					newA := newItem.(A)
-					newCh <- newA
-				}
+			Name: "origin",
+			HandlerFunc: func(oldItem map[string]interface{}, newItem map[string]interface{}, table string) {
+				oldCh <- oldItem
+				newCh <- newItem
 			},
 		},
 	}
@@ -58,7 +43,8 @@ func main() {
 }
 ```
 
-## MySQL 
+## MySQL
+
 ```shell
 docker run -d --name mysql \
     -p 3306:3306 \
@@ -69,8 +55,16 @@ docker run -d --name mysql \
 ```mysql
 show variables like '%log_bin%';
 
-select * from information_schema.processlist as p where p.command = 'Binlog Dump';
+select *
+from information_schema.processlist as p
+where p.command = 'Binlog Dump';
 
-CREATE TABLE origin(id INT(11), name VARCHAR(25), isAdmin boolean, createdAt datetime );
+CREATE TABLE origin
+(
+    id        INT(11),
+    name      VARCHAR(25),
+    isAdmin   boolean,
+    createdAt datetime
+);
 ```
 
