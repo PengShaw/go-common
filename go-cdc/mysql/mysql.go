@@ -117,7 +117,8 @@ func (h *binlogHandler) OnRow(e *canal.RowsEvent) error {
 		break
 	}
 	if !matched {
-		_, _ = fmt.Fprintln(DefaultWriter, "Warn: Not Matched Table ", tableName)
+		// not match should not be warned
+		//_, _ = fmt.Fprintln(DefaultWriter, "Warn: Not Matched Table ", tableName)
 		return nil
 	}
 
