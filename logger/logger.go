@@ -163,6 +163,14 @@ func (l *Logger) Infof(template string, args ...interface{}) {
 	l.logger.Infof(template, args...)
 }
 
+func Infow(msg string, keysAndValues ...interface{}) {
+	logger.Infow(msg, keysAndValues...)
+}
+
+func (l *Logger) Infow(msg string, keysAndValues ...interface{}) {
+	l.logger.Infow(msg, keysAndValues...)
+}
+
 // Error
 
 func Error(args ...interface{}) {
@@ -179,6 +187,14 @@ func (l *Logger) Error(args ...interface{}) {
 
 func (l *Logger) Errorf(template string, args ...interface{}) {
 	l.logger.Errorf(template, args...)
+}
+
+func Errorw(msg string, keysAndValues ...interface{}) {
+	logger.Errorw(msg, keysAndValues...)
+}
+
+func (l *Logger) Errorw(msg string, keysAndValues ...interface{}) {
+	l.logger.Errorw(msg, keysAndValues...)
 }
 
 // Debug
@@ -199,6 +215,14 @@ func (l *Logger) Debugf(template string, args ...interface{}) {
 	l.logger.Debugf(template, args...)
 }
 
+func Debugw(msg string, keysAndValues ...interface{}) {
+	logger.Debugw(msg, keysAndValues...)
+}
+
+func (l *Logger) Debugw(msg string, keysAndValues ...interface{}) {
+	l.logger.Debugw(msg, keysAndValues...)
+}
+
 // Warn
 
 func Warn(args ...interface{}) {
@@ -215,6 +239,14 @@ func (l *Logger) Warn(args ...interface{}) {
 
 func (l *Logger) Warnf(template string, args ...interface{}) {
 	l.logger.Warnf(template, args...)
+}
+
+func Warnw(msg string, keysAndValues ...interface{}) {
+	logger.Warnw(msg, keysAndValues...)
+}
+
+func (l *Logger) Warnw(msg string, keysAndValues ...interface{}) {
+	l.logger.Warnw(msg, keysAndValues...)
 }
 
 // Fatal
@@ -235,6 +267,14 @@ func (l *Logger) Fatalf(template string, args ...interface{}) {
 	l.logger.Fatalf(template, args...)
 }
 
+func Fatalw(msg string, keysAndValues ...interface{}) {
+	logger.Fatalw(msg, keysAndValues...)
+}
+
+func (l *Logger) Fatalw(msg string, keysAndValues ...interface{}) {
+	l.logger.Fatalw(msg, keysAndValues...)
+}
+
 // Panic
 
 func Panic(args ...interface{}) {
@@ -251,4 +291,12 @@ func (l *Logger) Panic(args ...interface{}) {
 
 func (l *Logger) Panicf(template string, args ...interface{}) {
 	l.logger.Panicf(template, args...)
+}
+
+func Panicw(msg string, keysAndValues ...interface{}) {
+	logger.Panicw(msg, keysAndValues...)
+}
+
+func (l *Logger) Panicw(msg string, keysAndValues ...interface{}) {
+	l.logger.Panicw(msg, keysAndValues...)
 }
