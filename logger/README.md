@@ -17,5 +17,8 @@ func main(){
 	logger.Infof("info $s","ok")
 	//log.Info("info ok")
 	//log.Infof("info $s","ok")
+
+	l := logger.WithField("keyA", "valueA")
+	l.Info("with key value")
 }
 ```

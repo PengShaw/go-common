@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -13,6 +14,7 @@ var logger *Logger
 type Logger struct {
 	logger *zap.SugaredLogger
 	hooks  *lumberjack.Logger
+	args   []interface{}
 }
 
 type Options struct {
@@ -145,6 +147,22 @@ func (o *Options) getLumberjack() *lumberjack.Logger {
 	}
 }
 
+func WithField(key string, value interface{}) *Logger {
+	return logger.WithField(key, value)
+}
+
+// WithField set key and value for logger msg
+func (l *Logger) WithField(key string, value interface{}) *Logger {
+	ln := Logger{
+		logger: l.logger,
+		hooks:  l.hooks,
+		args:   l.args,
+	}
+	ln.args = append(ln.args, key)
+	ln.args = append(ln.args, value)
+	return &ln
+}
+
 // Info
 
 func Info(args ...interface{}) {
@@ -156,19 +174,19 @@ func Infof(template string, args ...interface{}) {
 }
 
 func (l *Logger) Info(args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Infow(fmt.Sprint(args...), l.args...)
+		return
+	}
 	l.logger.Info(args...)
 }
 
 func (l *Logger) Infof(template string, args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Infow(fmt.Sprintf(template, args...), l.args...)
+		return
+	}
 	l.logger.Infof(template, args...)
-}
-
-func Infow(msg string, keysAndValues ...interface{}) {
-	logger.Infow(msg, keysAndValues...)
-}
-
-func (l *Logger) Infow(msg string, keysAndValues ...interface{}) {
-	l.logger.Infow(msg, keysAndValues...)
 }
 
 // Error
@@ -182,19 +200,19 @@ func Errorf(template string, args ...interface{}) {
 }
 
 func (l *Logger) Error(args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Errorw(fmt.Sprint(args...), l.args...)
+		return
+	}
 	l.logger.Error(args...)
 }
 
 func (l *Logger) Errorf(template string, args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Errorw(fmt.Sprintf(template, args...), l.args...)
+		return
+	}
 	l.logger.Errorf(template, args...)
-}
-
-func Errorw(msg string, keysAndValues ...interface{}) {
-	logger.Errorw(msg, keysAndValues...)
-}
-
-func (l *Logger) Errorw(msg string, keysAndValues ...interface{}) {
-	l.logger.Errorw(msg, keysAndValues...)
 }
 
 // Debug
@@ -208,19 +226,19 @@ func Debugf(template string, args ...interface{}) {
 }
 
 func (l *Logger) Debug(args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Debugw(fmt.Sprint(args...), l.args...)
+		return
+	}
 	l.logger.Debug(args...)
 }
 
 func (l *Logger) Debugf(template string, args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Debugw(fmt.Sprintf(template, args...), l.args...)
+		return
+	}
 	l.logger.Debugf(template, args...)
-}
-
-func Debugw(msg string, keysAndValues ...interface{}) {
-	logger.Debugw(msg, keysAndValues...)
-}
-
-func (l *Logger) Debugw(msg string, keysAndValues ...interface{}) {
-	l.logger.Debugw(msg, keysAndValues...)
 }
 
 // Warn
@@ -234,19 +252,19 @@ func Warnf(template string, args ...interface{}) {
 }
 
 func (l *Logger) Warn(args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Warnw(fmt.Sprint(args...), l.args...)
+		return
+	}
 	l.logger.Warn(args...)
 }
 
 func (l *Logger) Warnf(template string, args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Warnw(fmt.Sprintf(template, args...), l.args...)
+		return
+	}
 	l.logger.Warnf(template, args...)
-}
-
-func Warnw(msg string, keysAndValues ...interface{}) {
-	logger.Warnw(msg, keysAndValues...)
-}
-
-func (l *Logger) Warnw(msg string, keysAndValues ...interface{}) {
-	l.logger.Warnw(msg, keysAndValues...)
 }
 
 // Fatal
@@ -260,19 +278,19 @@ func Fatalf(template string, args ...interface{}) {
 }
 
 func (l *Logger) Fatal(args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Fatalw(fmt.Sprint(args...), l.args...)
+		return
+	}
 	l.logger.Fatal(args...)
 }
 
 func (l *Logger) Fatalf(template string, args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Fatalw(fmt.Sprintf(template, args...), l.args...)
+		return
+	}
 	l.logger.Fatalf(template, args...)
-}
-
-func Fatalw(msg string, keysAndValues ...interface{}) {
-	logger.Fatalw(msg, keysAndValues...)
-}
-
-func (l *Logger) Fatalw(msg string, keysAndValues ...interface{}) {
-	l.logger.Fatalw(msg, keysAndValues...)
 }
 
 // Panic
@@ -286,17 +304,17 @@ func Panicf(template string, args ...interface{}) {
 }
 
 func (l *Logger) Panic(args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Panicw(fmt.Sprint(args...), l.args...)
+		return
+	}
 	l.logger.Panic(args...)
 }
 
 func (l *Logger) Panicf(template string, args ...interface{}) {
+	if len(l.args) != 0 {
+		l.logger.Panicw(fmt.Sprintf(template, args...), l.args...)
+		return
+	}
 	l.logger.Panicf(template, args...)
-}
-
-func Panicw(msg string, keysAndValues ...interface{}) {
-	logger.Panicw(msg, keysAndValues...)
-}
-
-func (l *Logger) Panicw(msg string, keysAndValues ...interface{}) {
-	l.logger.Panicw(msg, keysAndValues...)
 }
