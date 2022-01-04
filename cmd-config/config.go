@@ -1,13 +1,19 @@
 package cmdconfig
 
 import (
+	"flag"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
 
-func SetConfigFlag(cmd *cobra.Command) {
+func SetConfigFlag() {
+	flag.StringVar(&cfgFile, "config", "./config.yaml", "config file")
+	flag.Parse()
+}
+
+func SetConfigFlagByCobra(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringVar(&cfgFile, "config", "./config.yaml", "config file")
 }
 

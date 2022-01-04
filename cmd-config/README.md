@@ -36,3 +36,24 @@ func main() {
 	}
 }
 ```
+
+```go
+package main
+
+import (
+	"fmt"
+	"os"
+	
+	cmdconfig "github.com/PengShaw/go-common/cmd-config"
+)
+
+func initial() {
+	cmdconfig.SetConfigFlag()
+	// init config
+	var c interface{}
+	if err := cmdconfig.GetConfig(&c); err != nil {
+		fmt.Printf("init config failed: %s", err.Error())
+		os.Exit(1)
+	}
+}
+```
