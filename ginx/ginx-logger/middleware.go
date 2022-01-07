@@ -1,17 +1,14 @@
-package middlewares
+package ginxlogger
 
 import (
+	contextkey "github.com/PengShaw/go-common/ginx/ginx-context-key"
 	"github.com/PengShaw/go-common/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"time"
 )
 
-const (
-	ReqIDContextKey = "req_id"
-)
-
-func Logger() gin.HandlerFunc {
+func Middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 开始时间
 		startTime := time.Now()
@@ -20,7 +17,7 @@ func Logger() gin.HandlerFunc {
 			logger.Errorf("generate uuid failed: [%s]", err.Error())
 			return
 		}
-		c.Set(ReqIDContextKey, id.String())
+		c.Set(contextkey.ReqIDContextKey, id.String())
 
 		// 处理请求
 		c.Next()

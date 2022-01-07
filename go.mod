@@ -3,6 +3,7 @@ module github.com/PengShaw/go-common
 go 1.17
 
 require (
+	github.com/casbin/casbin/v2 v2.40.6
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-mysql-org/go-mysql v1.3.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
@@ -12,10 +13,12 @@ require (
 	github.com/spf13/viper v1.9.0
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
+	gorm.io/gorm v1.22.4
 )
 
 require (
 	github.com/BurntSushi/toml v0.4.1 // indirect
+	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
@@ -24,6 +27,8 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.3 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
